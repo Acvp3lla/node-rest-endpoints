@@ -1,7 +1,7 @@
 {
   "name": "rest-endpoints",
   "version": "1.0.0",
-  "description": "creating restpoints for endpoints for database",
+  "description": "creating rest endpoints for database",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,8 +13,10 @@
     "express": "^4.17.1",
     "express-handlebars": "^5.0.0",
     "mysql": "^2.18.1",
+    "mysql2": "^2.1.0",
     "pg": "^8.2.2",
     "pg-hstore": "^2.3.3",
-    "sequelize": "^6.3.0"
+    "sequelize": "^6.3.0",
+    "sequelize-cli": "^6.2.0"
   }
 }
