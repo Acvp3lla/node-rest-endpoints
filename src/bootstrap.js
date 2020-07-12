@@ -22,5 +22,5 @@ module.exports = async () => {
     const users = await User.findAll({ where: { username: 'acvp3lla' }, include: [{model: Tweet, as: "Tweets"}] }).catch(errHandler);
 
     console.log("Acvp3lla's Tweets: ", users);
-
+    app.get('/', (req, res) => res.send(users));
 }

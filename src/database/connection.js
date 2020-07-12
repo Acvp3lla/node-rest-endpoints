@@ -1,4 +1,8 @@
 const Sequelize = require('sequelize');
+
+const user = require('../models/User');
+const tweet = require('../models/Tweets')
+
 const sequelize = new Sequelize(
     'socialnetwork', 
     'root', 
@@ -10,6 +14,13 @@ const sequelize = new Sequelize(
     }
 );
 
-module.exports = sequelize;
+const userModel = user(sequelize, Sequelize);
+const tweetModel = tweet(sequelize, Sequelize);
 global.sequelize = sequelize;
 
+
+module.exports = {
+    sequelize,
+    userModel,
+    tweetModel
+}
