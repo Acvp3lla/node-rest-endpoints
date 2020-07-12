@@ -45,6 +45,7 @@ router.use((err, req, res, next) => {
 //////////////////////////////////////////////////////////////
 const { userModel, tweetModel } = require('./src/database/connection');
 
+app.get('/', (req, res) => res.send('index'));
 app.get('/api', (req, res) => res.send('ok'));
 
 app.get( "/api/tweet", (req, res) =>
