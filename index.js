@@ -43,9 +43,12 @@ router.use((err, req, res, next) => {
 
 //Routes
 //////////////////////////////////////////////////////////////
+//Tweet Table Routes
+
 const { userModel, tweetModel } = require('./src/database/connection');
 
 app.get('/', (req, res) => res.send('index'));
+
 app.get('/api', (req, res) => res.send('ok'));
 
 app.get( "/api/tweet", (req, res) =>
@@ -70,6 +73,7 @@ app.get( "/api/tweet/:id", (req, res) =>
         console.log("Error: ", err)
     })
 );
+
 app.delete( "/api/tweet/:id", (req, res) =>
     tweetModel.destroy({
       where: {
@@ -83,8 +87,10 @@ app.delete( "/api/tweet/:id", (req, res) =>
         console.log("Error: ", err)
     })
   );
+
 //////////////////////////////////
-//User Routes
+//User Table Routes
+
 app.get( "/api/user", (req, res) =>
   userModel.findAll()
   .then(result => res.json(result))
