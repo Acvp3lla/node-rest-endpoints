@@ -62,6 +62,7 @@ app.post('/api/user/', (req, res) => {
     console.log('Created')
   })
   .catch(err =>{
+    res.json(err.errors[0].message)
     console.log("Cannot Create: ", err)
   })
 })
@@ -78,8 +79,11 @@ app.patch( "/api/user/:id", (req, res) => {
     where: {
       id: req.params.id
     }
-  }).then(result => res.json(result))
+  }).then(result =>{
+    res.json(result)
+  })
   .catch(err =>{
+    res.json(err.errors[0].message)
     console.log("Error: ", err)
   })
 });
@@ -104,7 +108,8 @@ app.get( "/api/user/:id", (req, res) =>{
     res.json(result)
   })
   .catch(err =>{
-      console.log("Error: ", err)
+    res.json(err.errors[0].message)
+    console.log("Error: ", err)
   })
 });
 //////////////////////////////////////////////////////////////
