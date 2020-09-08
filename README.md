@@ -5,7 +5,7 @@ API endpoints for MySQL Database built using Sequelize, Express and NodeJs.
 npm install
 
 # to start the app run the command 
-Node index.js
+npm start
 
 # Queries 
 can be made from the Browser or by using Postman 
