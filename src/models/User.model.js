@@ -20,7 +20,7 @@ module.exports = function(sequelize, DataTypes){
             unique: true
         },
         password: {
-            type: DataTypes.STRING(20),
+            type: DataTypes.STRING,
             allowNull: false
         },
     },{

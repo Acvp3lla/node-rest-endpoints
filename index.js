@@ -1,17 +1,21 @@
-const cors = require('cors');
-const dotenv = require('dotenv');
-const express = require('express');
+const expressEjsLayout = require('express-ejs-layouts')
 const bodyParser = require('body-parser');
+const express = require('express');
+const dotenv = require('dotenv');
+const cors = require('cors');
+const app = express();
 dotenv.config();
 
-const app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 const PORT = 4000;
 
+const userEndpoint = require('./src/endpoints/user.endpoint');
+const authEndpoint = require('./src/endpoints/auth.endpoint');
 
 //Formats the Json Result
 app.set('json spaces', 2);
+
 
 //CORS Header Configurations//////////////////////////
 app.use((req, res, next) => {
@@ -26,95 +30,19 @@ app.use(cors());
 
 ///////////////////////////////////
 
-// app.set("views", path.resolve("./src/views"));
-
-//Request Parsing
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
 //DB Tables
 const { userModel} = require('./src/database/connection');
 
-
+////////////////////////////////////////////////
 //Routes
-//////////////////////////////////////////////////////////////
-//Tweet Table Routes
+////////////////////////////////////////////////
 
-app.get('/', (req, res) => res.send('index'));
 
 app.get('/api', (req, res) => res.send('ok'));
-
-
-//////////////////////////////////
-//  User Table Routes  //////////
-/////////////////////////////////
-
-//Create a new User
-app.post('/api/user/', (req, res) => {
-  userModel.create({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    username: req.body.username,
-    password: req.body.password
-  })
-  .then(result =>{
-    res.json(result)
-    console.log('Created')
-  })
-  .catch(err =>{
-    res.json(err.errors[0].message)
-    console.log("Cannot Create: ", err)
-  })
-})
-
-//Update User Profile
-app.patch( "/api/user/:id", (req, res) => {
-  userModel.update({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    username: req.body.username,
-    password: req.body.password
-  },
-  {
-    where: {
-      id: req.params.id
-    }
-  }).then(result =>{
-    res.json(result)
-  })
-  .catch(err =>{
-    res.json(err.errors[0].message)
-    console.log("Error: ", err)
-  })
-});
-
-//Get All Users
-app.get( "/api/user", (req, res) => {
-  userModel.findAll()
-  .then(result => {
-    res.json(result)
-  })
-  .catch(err =>{
-    console.log("Error: ", err)
-  })
-});
-
-//Get User by ID
-app.get( "/api/user/:id", (req, res) =>{
-  userModel.findAll({
-    where: { id: req.params.id}
-  })
-  .then(result =>{
-    res.json(result)
-  })
-  .catch(err =>{
-    res.json(err.errors[0].message)
-    console.log("Error: ", err)
-  })
-});
-//////////////////////////////////////////////////////////////
+userEndpoint(app, userModel);
+authEndpoint(app);
 
 app.listen(PORT, err => { 
     if (err) return console.log(`Cannot Listen on Port: ${PORT}`)
     console.log(`App is running on Port: ${PORT}`)
-});
+})
