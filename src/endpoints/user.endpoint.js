@@ -66,13 +66,18 @@ module.exports = (app, userModel) => {
     
     //Get All Users
     app.get("/api/user", (req, res) => {
-        userModel.findAll()
-        .then(result => {
-        res.json(result)
-        })
-        .catch(err =>{
-        console.log("Error: ", err)
-        })
+        // if (req.session && req.session.user){
+            userModel.findAll()
+            .then(result => {
+            res.json(result)
+            })
+            .catch(err =>{
+            console.log("Error: ", err)
+            })
+        // }
+        // else{
+        //     res.send('login')
+        // }
     });
     
     //Get User by Username
