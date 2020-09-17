@@ -38,7 +38,7 @@ module.exports = (app, userModel) => {
 
     
     //Update User Profile
-    app.patch("/api/user/:id", (req, res) => {
+    app.patch("/api/user/:username", (req, res) => {
         //Password Hashing  ////////////////////////
         const reqPassword = req.body.password;
         const salt = bcrypt.genSaltSync(saltRounds);
@@ -52,7 +52,7 @@ module.exports = (app, userModel) => {
         },
         {
         where: {
-            id: req.params.id
+            username: req.params.username
         }
         }).then(result =>{
         res.json(result)
