@@ -39,29 +39,57 @@ module.exports = (app, userModel) => {
     
     //Update User Profile
     app.patch("/api/user/:username", (req, res) => {
-        //Password Hashing  ////////////////////////
+        //Password from request  ////////////////////////
         const reqPassword = req.body.password;
-        const salt = bcrypt.genSaltSync(saltRounds);
-        const hash = bcrypt.hashSync(reqPassword, salt);
 
-        userModel.update({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        username: req.body.username,
-        password: hash
-        },
-        {
-        where: {
-            username: req.params.username
+        function isBlank(str) {
+            return (!str || /^\s*$/.test(str));
         }
-        }).then(result =>{
-        res.json(result)
-        })
-        .catch(err =>{
-        res.json(err.errors[0].message)
-        // res.json(err)
-        console.log("Error: ", err)
-        })
+        // console.log(isBlank(reqPassword))
+        if(isBlank(reqPassword)){
+
+            userModel.update({
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                },
+                {
+                where: {
+                    username: req.params.username
+                }
+                }).then(result =>{
+                    res.json(result)
+                    console.log('Updated', result);
+                })
+                .catch(err =>{
+                res.json(err.errors[0].message)
+                // res.json(err)
+                console.log("Error: ", err)
+            })
+        } 
+        else{
+            //Password Hashing  ////////////////////////
+            const salt = bcrypt.genSaltSync(saltRounds);
+            const hash = bcrypt.hashSync(reqPassword, salt);
+
+            userModel.update({
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                password: hash
+                },
+                {
+                where: {
+                    username: req.params.username
+                }
+                }).then(result =>{
+                    res.json(result)
+                    console.log('Updated');
+                })
+                .catch(err =>{
+                res.json(err.errors[0].message)
+                // res.json(err)
+                console.log("Error: ", err)
+            })
+        }
     });
     
     //Get All Users
@@ -69,10 +97,10 @@ module.exports = (app, userModel) => {
         // if (req.session && req.session.user){
             userModel.findAll()
             .then(result => {
-            res.json(result)
+                res.json(result)
             })
             .catch(err =>{
-            console.log("Error: ", err)
+                console.log("Error: ", err)
             })
         // }
         // else{
@@ -83,10 +111,25 @@ module.exports = (app, userModel) => {
     //Get User by Username
     app.get("/api/user/:username", (req, res) =>{
         userModel.findAll({
-        where: { username: req.params.username}
+            where: { 
+                username: req.params.username
+            },
+            raw: true,
+            timestamps: false
         })
         .then(result =>{
-        res.send(result)
+            res.send(result)
+            // firstName = result.data[0].firstName
+            // lastName = result.data[0].lastName
+            // username = result.data[0].username
+
+            // //Response data to be sent
+            // user = {
+            //     firstName: firstName, 
+            //     lastName: lastName, 
+            //     username: username,
+            // }
+            // res.send(user)
         })
         .catch(err =>{
         res.json(err.errors[0].message)

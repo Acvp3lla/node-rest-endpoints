@@ -76,7 +76,7 @@ const mySession = session({
     resave: false,
     saveUninitialized: true,
     cookie: {
-        expires:(60 * 60)
+        expires:(60 * 1000 * 60)
     }
 });
 app.use(mySession);
@@ -126,10 +126,11 @@ app.post('/api/login', validatePayloadMiddleware, (req,res)=>{
     };
     axios(options)
     .then(result =>{
+        //If user is not found the data will be an empty array
         //Checks for empty Array
         if (result.data.length === 0){
             //User does not exist
-            res.status(404).send(false)
+            res.send(false)
         }
         else{
             //Password from our DB
@@ -148,7 +149,7 @@ app.post('/api/login', validatePayloadMiddleware, (req,res)=>{
             }
 
             req.session.user = user
-            console.log(req.session)
+            // console.log(req.session)
             //Result of the comparison
             result = bcrypt.compareSync(password, hash);
             if (result === true){
