@@ -59,7 +59,7 @@ module.exports = (app, inventoryModel) =>{
     app.get('/api/inventory', (req, res) => {
         inventoryModel.findAll()
         .then(result => {
-            res.send(result)
+            res.json(result)
         })
         .catch(err => {
             res.send('Cannot Get',err)

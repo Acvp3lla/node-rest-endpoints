@@ -42,12 +42,13 @@ module.exports = (app, userModel) => {
         //Password from request  ////////////////////////
         const reqPassword = req.body.password;
 
+        // Function to check for blank password value
         function isBlank(str) {
             return (!str || /^\s*$/.test(str));
         }
-        // console.log(isBlank(reqPassword))
+        
         if(isBlank(reqPassword)){
-
+            // If password is blank update all the other fields
             userModel.update({
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
@@ -56,18 +57,23 @@ module.exports = (app, userModel) => {
                 where: {
                     username: req.params.username
                 }
-                }).then(result =>{
-                    res.json(result)
-                    console.log('Updated', result);
+            })
+            .then(result =>{
+                res.json({
+                    status: result[0],
+                    message: 'User Information Updated'
                 })
-                .catch(err =>{
+                console.log('Updated', result);
+            })
+            .catch(err =>{
                 res.json(err.errors[0].message)
-                // res.json(err)
                 console.log("Error: ", err)
             })
         } 
         else{
-            //Password Hashing  ////////////////////////
+            // If a password value is present we hash the value and update all the fields
+
+            // Password Hashing  
             const salt = bcrypt.genSaltSync(saltRounds);
             const hash = bcrypt.hashSync(reqPassword, salt);
 
@@ -80,13 +86,16 @@ module.exports = (app, userModel) => {
                 where: {
                     username: req.params.username
                 }
-                }).then(result =>{
-                    res.json(result)
-                    console.log('Updated');
+            })
+            .then(result =>{
+                res.json({
+                    status: result[0],
+                    message: 'User Information Updated'
                 })
-                .catch(err =>{
+                console.log('Updated');
+            })
+            .catch(err =>{
                 res.json(err.errors[0].message)
-                // res.json(err)
                 console.log("Error: ", err)
             })
         }
