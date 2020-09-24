@@ -14,7 +14,7 @@ module.exports = (app, inventoryModel) =>{
         })
         .then(result => {
             res.send(result)
-            console.log('Inventory Item Created')
+            console.log('Inventory Item Added')
         })
         .catch(err =>{
             res.send('Cannot Create',err)
