@@ -1,32 +1,33 @@
 module.exports = (sequelize, DataTypes) => {
-    return sequelize.define("inventory",{
+    return sequelize.define('order', {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
             autoIncrement: true,
             primaryKey: true
         },
+        itemNo: {
+            type: DataTypes.INTEGER,
+            references: {
+            model: 'inventory',
+            key: 'id'
+            },
+            allowNull: false,
+            foreignKey: true,
+        },
         product: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        description: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        status: {
-            type: DataTypes.STRING,
-            allowNull: false,
+        quantity: {
+            type: DataTypes.INTEGER,
+            allowNull: false
         },
         value: {
             type: DataTypes.DOUBLE,
-            allowNull: false,
-        },
-        quantity: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
+            allowNull: false
+        }
     },{
-        tableName: "inventory"
-    })
+        tableName: 'order'
+    });
 }
