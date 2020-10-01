@@ -6,7 +6,11 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true,
             primaryKey: true
         },
-        product: {
+        productName: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        category: {
             type: DataTypes.STRING,
             allowNull: false,
         },
@@ -18,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        value: {
+        price: {
             type: DataTypes.DOUBLE,
             allowNull: false,
         },

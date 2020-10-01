@@ -6,9 +6,10 @@ module.exports = (app, inventoryModel) =>{
     // Create Record in Tabel
     app.post('/api/inventory', (req, res) => {
         inventoryModel.create({
-            product: req.body.product,
+            productName: req.body.productName,
+            category: req.body.category,
             description: req.body.description,
-            value: req.body.value,
+            price: req.body.price,
             quantity: req.body.quantity,
             status: req.body.status
         })
@@ -17,7 +18,7 @@ module.exports = (app, inventoryModel) =>{
             console.log('Inventory Item Added')
         })
         .catch(err =>{
-            res.send('Cannot Create',err)
+            res.send(err)
             console.log('Cannot Create',err)
         })
     });
@@ -25,9 +26,10 @@ module.exports = (app, inventoryModel) =>{
     // Update Record in table
     app.patch('/api/inventory/update/:id', (req, res) => {
         inventoryModel.update({
-            product: req.body.product,
+            productName: req.body.productName,
+            category: req.body.category,
             description: req.body.description,
-            value: req.body.value,
+            price: req.body.price,
             quantity: req.body.quantity,
             status: req.body.status
         }, {
@@ -50,7 +52,7 @@ module.exports = (app, inventoryModel) =>{
             }
         })
         .catch(err => {
-            res.send('Cannot Update',err)
+            res.send(err)
             console.log('Cannot Update',err)
         })
     });
@@ -62,7 +64,7 @@ module.exports = (app, inventoryModel) =>{
             res.json(result)
         })
         .catch(err => {
-            res.send('Cannot Get',err)
+            res.send(err)
             console.log('Cannot Get',err)
         })
     });
@@ -78,7 +80,7 @@ module.exports = (app, inventoryModel) =>{
             res.send(result)
         })
         .catch(err =>{
-            res.send('Cannot Get',err)
+            res.send(err)
             console.log('Cannot Get',err)
         })
     });
@@ -107,7 +109,7 @@ module.exports = (app, inventoryModel) =>{
             }
         })
         .catch(err => {
-            res.send('Cannot Remove',err)
+            res.send(err)
             console.log('Cannot Remove',err)
         })
     })
