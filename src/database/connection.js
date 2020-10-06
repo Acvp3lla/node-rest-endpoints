@@ -5,6 +5,7 @@ dotenv.config();
 // Database Table Schemas
 const userSchema = require('../models/User.model');
 const orderSchema = require('../models/Order.model');
+const orderItemSchema = require('../models/OrderItem.model');
 const inventorySchema = require('../models/Inventory.model');
 
 
@@ -28,6 +29,7 @@ const sequelize_postGres = new Sequelize(
 // Sequlized Models
 const userModel = userSchema(sequelize_postGres, Sequelize);
 const orderModel = orderSchema(sequelize_postGres, Sequelize);
+const orderItemModel = orderItemSchema(sequelize_postGres, Sequelize);
 const inventoryModel = inventorySchema(sequelize_postGres, Sequelize);
 
 //PostGres Sync
@@ -42,5 +44,6 @@ module.exports = {
     sequelize_postGres,
     userModel,
     orderModel,
+    orderItemModel,
     inventoryModel
 }
