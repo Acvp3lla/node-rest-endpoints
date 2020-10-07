@@ -1,10 +1,20 @@
 module.exports = (sequelize, DataTypes) => {
     return sequelize.define('orderItem', {
-        orderId: {
+        id: {
             type: DataTypes.INTEGER,
             allowNull: false,
             autoIncrement: true,
             primaryKey: true
+        },
+        orderId: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'order',
+                key: 'orderId'
+            },
+            allowNull: false,
+            // autoIncrement: true,
+            foreignKey: true
         },
         prodId: {
             type: DataTypes.INTEGER,

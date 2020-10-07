@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 const PORT = 4000;
 
 const userEndpoint = require('./src/endpoints/user.endpoint');
-const orderEndpoint = require('./src/endpoints/Order.endpoint');
+const orderItemEndpoint = require('./src/endpoints/OrderItem.endpoint');
 const inventoryEndpoint = require('./src/endpoints/Inventory.endpoint');
 const authEndpoint = require('./src/endpoints/auth.endpoint');
 
@@ -37,7 +37,7 @@ app.use(cors({origin: [
 
 
 //DB Tables
-const { userModel, inventoryModel, orderModel} = require('./src/database/connection');
+const { userModel, inventoryModel, orderItemModel, orderModel} = require('./src/database/connection');
 
 /////////////////////////////////
 // Session Management
@@ -117,7 +117,7 @@ const validatePayloadMiddleware = (req, res, next) => {
 
 const axios = require('axios');
 const bcrypt = require('bcrypt');
-const OrderEndpoint = require('./src/endpoints/Order.endpoint');
+const OrderEndpoint = require('./src/endpoints/OrderItem.endpoint');
 
 //Login Handle
 app.post('/api/login', validatePayloadMiddleware, (req,res)=>{
@@ -133,7 +133,7 @@ app.post('/api/login', validatePayloadMiddleware, (req,res)=>{
         //Checks for empty Array
         if (result.data.length === 0){
             //User does not exist
-            res.send(false)
+            res.send(false);
         }
         else{
             //Password from our DB
@@ -166,7 +166,7 @@ app.post('/api/login', validatePayloadMiddleware, (req,res)=>{
         }
     })
     .catch(err=>{
-        console.log(err)
+        console.log(err);
     })
 })
 
@@ -175,13 +175,118 @@ app.get('/api/login', (req, res) => {
     req.session.user ? res.status(200).send({loggedIn: true}) : res.status(200).send({loggedIn: false});
 });
 
+//////////////////////////////
+// Order Endpoints
+//////////////////////////////
+app.post('/api/order', (req, res) => {
+    orderModel.create({
+        totalPrice: req.body.totalPrice
+    })
+    .then(result => {
+        res.send(result);
+    })
+    .catch(err => {
+        res.send(err);
+        console.log('Cannot Create Order', err);
+    })
+})
+
+app.patch('/api/order/:id', (req, res) => {
+    orderModel.update({
+        totalPrice: req.body.totalPrice
+    },{
+        where: {
+            orderId: req.params.id
+        }
+    })
+    .then(result => {
+        if(result[0] === 1){
+            res.send({
+                status: 200,
+                message: `Order ${req.params.id} Updated`
+            });
+            console.log('Order Updated!');
+        }
+        else{
+            res.json({
+                status: 404,
+                message: `Order ${req.params.id} Not Found`
+            });
+            console.log('Order Not Found!');
+        }
+    })
+    .catch(err => {
+        res.send('Cannot Update', err);
+        console.log('Cannot Update', err);
+    })
+})
+
+app.get('/api/order', (req, res) => {
+    orderModel.findAll()
+    .then(result => {
+        res.send(result);
+    })
+    .catch(err => {
+        res.send(err);
+        console.log('Cannot find Order',err);
+    })
+})
+
+
+app.get('/api/order/:id', (req, res) => {
+    orderModel.findAll({
+        where: {
+            orderId: req.params.id
+        }
+    })
+    .then(result => {
+        res.send(result);
+    })
+    .catch(err => {
+        res.send(err);
+        console.log('Cannot find Order',err);
+    })
+})
+
+app.delete('/api/order/:id', (req, res) => {
+    OrderModel.destroy({
+        where: {
+            orderId: req.params.id
+        }
+    })
+    .then(result => {
+        if(result === 1){
+            res.json({
+                status: 200,
+                message: `Order ${req.params.id} Removed`
+            });
+            console.log('Order Removed!');
+        }
+        else{
+            res.json({
+                status: 404,
+                message: `Order ${req.params.id} Not Found`
+            })
+            console.log('Order Not Found!');
+        }
+    })
+    .catch(err => {
+        res.send('Cannot Remove Order', err);
+    })
+})
+
+
+
+
+
+
 
 //////////////////////////////
 // Table Endpoints
 //////////////////////////////
 
 userEndpoint(app, userModel);
-OrderEndpoint(app, orderModel);
+orderItemEndpoint(app, orderItemModel);
 inventoryEndpoint(app, inventoryModel);
 
 // authEndpoint(app, validatePayloadMiddleware, session);

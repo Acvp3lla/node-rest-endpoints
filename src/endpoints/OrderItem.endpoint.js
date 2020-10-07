@@ -1,15 +1,15 @@
-module.exports = (app, orderModel) => {
+module.exports = (app, orderItemModel) => {
     ///////////////////////////////////////////////
     // Order Endpoints 
     ///////////////////////////////////////////////
 
     // Create an Order
-    app.post('/api/order', (req, res) => {
-        orderModel.create({
-            itemNo: req.body.itemNo,
-            product: req.body.product,
+    app.post('/api/order-item', (req, res) => {
+        orderItemModel.create({
+            orderId: req.body.orderId,
+            prodId: req.body.prodId,
             quantity: req.body.quantity,
-            value: req.body.value 
+            itemPrice: req.body.itemPrice 
         })
         .then(result => {
             res.send(result);
@@ -17,34 +17,34 @@ module.exports = (app, orderModel) => {
         })
         .catch(err =>{
             res.send(err);
-            console.log('Cannot Create Order: ', err)
+            console.log('Cannot Create Order: ', err.original)
         })
     })
 
     // Update an Order
-    app.patch('/api/order/update/:id', (req, res) => {
-        orderModel.update({
-            itemNo: req.body.itemNo,
-            product: req.body.product,
+    app.patch('/api/order-item/update/:id', (req, res) => {
+        orderItemModel.update({
+            orderId: req.body.orderId,
+            prodId: req.body.prodId,
             quantity: req.body.quantity,
-            value: req.body.value 
+            itemPrice: req.body.itemPrice  
         },{
             where: {
-                id: req.params.id
+                orderId: req.params.id
             }
         })
         .then(result => {
             if(result[0] === 1){
                 res.send({
                     status: 200,
-                    message: `Order ${req.params.id} Updated`
+                    message: `Order Item ${req.params.id} Updated`
                 });
                 console.log('Order Updated!');
             }
             else{
                 res.json({
                     status: 404,
-                    message: `Order ${req.params.id} Not Found`
+                    message: `Order Item ${req.params.id} Not Found`
                 });
                 console.log('Order Not Found!');
             }
@@ -56,8 +56,8 @@ module.exports = (app, orderModel) => {
     })
 
     // Get All Orders
-    app.get('/api/order', (req, res) => {
-        orderModel.findAll()
+    app.get('/api/order-item', (req, res) => {
+        orderItemModel.findAll()
         .then(result => {
             res.send(result)
         })
@@ -68,10 +68,10 @@ module.exports = (app, orderModel) => {
     })
 
     // Get Specified Order
-    app.get('/api/order/:id', (req, res) => {
-        orderModel.findAll({
+    app.get('/api/order-item/:id', (req, res) => {
+        orderItemModel.findAll({
             where: {
-                id: req.params.id
+                orderId: req.params.id
             }
         })
         .then(result => {
@@ -84,28 +84,27 @@ module.exports = (app, orderModel) => {
     })
 
     // Delete Order
-    app.delete('/api/order/delete/:id', (req, res) => {
-        orderModel.destroy({
+    app.delete('/api/order-item/delete/:id', (req, res) => {
+        orderItemModel.destroy({
             where: {
-                id: req.params.id
+                orderId: req.params.id
             }
         })
         .then(result => {
             if(result === 1){
                 res.json({
                     status: 200,
-                    message: `Order ${req.params.id} Removed`
+                    message: `Order Item ${req.params.id} Removed`
                 });
                 console.log('Order Removed!');
             }
             else{
                 res.json({
                     status: 404,
-                    message: `Order ${req.params.id} Not Found`
+                    message: `Order Item ${req.params.id} Not Found`
                 })
                 console.log('Order Not Found!')
-            }
-            
+            }  
         })
         .catch(err => {
             res.send(err)
